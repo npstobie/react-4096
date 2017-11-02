@@ -10,10 +10,167 @@ export default class Game extends React.Component {
       boardHistory: [initialBoard],
       score: 0
     }
+
+    this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
+
+  handleKeyPress(event) {
+    let board = this.state.boardHistory[this.state.boardHistory.length - 1].slice();
+    let points = 0;
+
+    switch (event.key) {
+      
+      case 'ArrowDown':
+
+        for (let y = 0; y<4; y++) {
+          let boardVals = [];
+          for (let x = 3; x>=0; x--) {
+            if (board[x][y].value !== null) {
+              boardVals.push(board[x][y].value);
+            }
+          }
+
+          let newVals = [];
+          for (let i=0; i<boardVals.length; i++) {
+            if (boardVals[i] === boardVals[i+1]) {
+              newVals.push(boardVals[i]*2)
+              points += boardVals[i]*2;
+              i+=1;
+            } else {
+              newVals.push(boardVals[i]);
+            }
+          }
+
+          for (let x = 3; x>=0; x--) {
+            let newVal = newVals.shift();
+            if (newVal) {
+              board[x][y].value = newVal;
+            } else {
+              board[x][y].value = null;
+            }
+          }
+        }
+
+        break
+
+      case 'ArrowUp':
+
+        for (let y = 0; y<4; y++) {
+          let boardVals = [];
+          for (let x = 0; x<4; x++) {
+            if (board[x][y].value !== null) {
+              boardVals.push(board[x][y].value);
+            }
+          }
+
+          let newVals = [];
+          for (let i=0; i<boardVals.length; i++) {
+            if (boardVals[i] === boardVals[i+1]) {
+              newVals.push(boardVals[i]*2)
+              points += boardVals[i]*2;
+              i+=1;
+            } else {
+              newVals.push(boardVals[i]);
+            }
+          }
+
+          for (let x = 0; x<4; x++) {
+            let newVal = newVals.shift();
+            if (newVal) {
+              board[x][y].value = newVal;
+            } else {
+              board[x][y].value = null;
+            }
+          }
+        }
+
+        break
+
+      case 'ArrowLeft':
+
+        for (let x = 0; x < 4; x++) {
+          let boardVals = [];
+          for (let y = 0; y<4; y++) {
+            if (board[x][y].value !== null) {
+              boardVals.push(board[x][y].value);
+            }
+          }
+
+          let newVals = [];
+          for (let i=0; i<boardVals.length; i++) {
+            if (boardVals[i] === boardVals[i+1]) {
+              newVals.push(boardVals[i]*2)
+              points += boardVals[i]*2;
+              i+=1;
+            } else {
+              newVals.push(boardVals[i]);
+            }
+          }
+
+          for (let y = 0; y<4; y++) {
+            let newVal = newVals.shift();
+            if (newVal) {
+              board[x][y].value = newVal;
+            } else {
+              board[x][y].value = null;
+            }
+          }
+        }
+
+        break
+
+      case 'ArrowRight':
+
+        for (let x = 0; x<4; x++) {
+          let boardVals = [];
+          for (let y = 3; y>=0; y--) {
+            if (board[x][y].value !== null) {
+              boardVals.push(board[x][y].value);
+            }
+          }
+
+          let newVals = [];
+          for (let i=0; i<boardVals.length; i++) {
+            if (boardVals[i] === boardVals[i+1]) {
+              newVals.push(boardVals[i]*2)
+              points += boardVals[i]*2;
+              i+=1;
+            } else {
+              newVals.push(boardVals[i]);
+            }
+          }
+
+          for (let y = 3; y>=0; y--) {
+            let newVal = newVals.shift();
+            if (newVal) {
+              board[x][y].value = newVal;
+            } else {
+              board[x][y].value = null;
+            }
+          }
+        }
+
+        break
+
+      default:
+        return
+    }
+
+    addValueToBoard(board);
+    
+
+
+    this.setState({
+      boardHistory: this.state.boardHistory.concat([board]),
+      score: this.state.score + points
+    })
+  }
   
   render() {
+    // listens for keypresses on the keyboard and calls the handleKeyPress function
+    document.onkeydown = this.handleKeyPress;
+
     return (
       <div>
         <Board
