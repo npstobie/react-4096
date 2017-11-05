@@ -17,9 +17,9 @@ export default class Board extends React.Component {
 		var board = this.props.board;
 		for (let x=0; x<board.length; x++) {
 			for (let y=0; y<board[x].length; y++) {
-				row.push(this.renderSquare(board[x][y].value, board[x][y].color, (x*4+y)))
+				row.push(this.renderSquare(board[x][y].value, board[x][y]['background-color'], (x*4+y)))
 			}
-			renderedSquares.push([<div key={x + 'row'} className="board-row">{row}</div>]);
+			renderedSquares.push([<div key={x + 'row'} className="board-row col-md-12 col-lg-12 col-sm-12 col-xs-12 flexBox">{row}</div>]);
 			row = [];
 		}
 		

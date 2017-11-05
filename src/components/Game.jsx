@@ -2,7 +2,6 @@ import React from 'react';
 import Board from './Board'
 import Score from './Score'
 import StepBack from './StepBack'
-
 const _ = require('lodash');
 
 export default class Game extends React.Component {
@@ -56,6 +55,7 @@ export default class Game extends React.Component {
             let newVal = newVals.shift();
             if (newVal) {
               newBoard[x][y].value = newVal;
+              newBoard[x][y]['background-color'] = colorScheme[newVal.toString()]
             }
           }
         }
@@ -87,6 +87,7 @@ export default class Game extends React.Component {
             let newVal = newVals.shift();
             if (newVal) {
               newBoard[x][y].value = newVal;
+              newBoard[x][y]['background-color'] = colorScheme[newVal.toString()]
             }
           }
         }
@@ -118,6 +119,7 @@ export default class Game extends React.Component {
             let newVal = newVals.shift();
             if (newVal) {
               newBoard[x][y].value = newVal;
+              newBoard[x][y]['background-color'] = colorScheme[newVal.toString()]
             }
           }
         }
@@ -149,6 +151,7 @@ export default class Game extends React.Component {
             let newVal = newVals.shift();
             if (newVal) {
               newBoard[x][y].value = newVal;
+              newBoard[x][y]['background-color'] = colorScheme[newVal.toString()]
             }
           }
         }
@@ -177,19 +180,21 @@ export default class Game extends React.Component {
 
     return (
       <div>
-        <div className="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
-        <div className="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+        <div className="col-lg-3 col-md-2 col-sm-0 col-xs-0"></div>
+        <div className="col-lg-6 col-md-8 col-sm-12 col-xs-12">
           <Board
             board={this.state.boardHistory[this.state.boardHistory.length - 1]}
           />
+        </div>
+        <div className="col-lg-3 col-md-2 col-sm-12 col-xs-12">
           <Score
             score={this.state.score[this.state.score.length - 1]}
           />
           <StepBack
             onClick={() => this.handleStepback()}
+            disabled={this.state.boardHistory.length === 1}
           />
         </div>
-        <div className="col-lg-1 col-md-1 col-sm-0 col-xs-0"></div>
       </div>
     )
   }
@@ -201,10 +206,26 @@ function createBoard() {
   for (let x=0; x<4; x++) {
     emptyBoard.push([]);
     for (let y=0; y<4; y++) {
-      emptyBoard[x].push({value: null, 'background-color': 'white'})
+      emptyBoard[x].push({value: null, 'background-color': '#FFFDE7'})
     }
   }
   return emptyBoard;
+}
+
+const colorScheme = {
+  'null': '#FFFDE7',
+  '2': '#FFF59D',
+  '4': '#FFCC80',
+  '8': '#D4E157',
+  '16': '#66BB6A',
+  '32': '#26A69A',
+  '64': '#FF7043',
+  '128': '#29B6F6',
+  '256': '#5C6BC0',
+  '512': '#26C6DA',
+  '1024': '#AB47BC',
+  '2048': '#EC407A',
+  '8192': '#FF5722'
 }
 
 let initialBoard = createBoard();
@@ -238,5 +259,6 @@ function addValueToBoard(board, first) {
   }
   
   board[position[0]][position[1]].value = newVal;
+  board[position[0]][position[1]]['background-color'] = colorScheme[newVal.toString()];
   return board;
 }
