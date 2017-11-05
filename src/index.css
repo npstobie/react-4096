@@ -1,9 +1,16 @@
+@font-face {
+  font-family: heartbeat;
+  src: url('./assets/heartbeat.ttf');
+}
+
 body {
-    left: 0;
-    -webkit-overflow-scrolling: touch;
-    position: fixed;
-    top: 0;
-    width: 100%;
+  left: 0;
+  -webkit-overflow-scrolling: touch;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-image: url("./assets/giftly.png");
+  background-repeat: repeat;
 }
 
 .game {
@@ -12,17 +19,19 @@ body {
 
 .title {
   text-align: center;
-  font-size: 8vh;
+  font-size: 12vh;
+  font-family: 'heartbeat', Times, serif;
 }
 
 .square {
   width: 100px;
   height: 100px;
   margin: 2px;
-  font-size: 6vh;
+  font-size: 9vh;
   text-align: center;
   line-height: 100px;
   border-radius: 10px;
+  font-family: 'heartbeat', Times, serif;
 }
 
 .board-row {
@@ -35,8 +44,14 @@ body {
 }
 
 .score {
-  font-size: 6vh;
-  text-align: center
+  font-size: 10vh;
+  text-align: center;
+  font-family: 'heartbeat', Times, serif;
+}
+
+.stepback {
+  font-family: 'heartbeat', Times, serif;
+  font-size: 5vh;
 }
 
 .flexBox {
@@ -46,10 +61,18 @@ body {
 }
 
 @media screen and (max-width: 480px) {
+  .title {
+    text-align: center;
+    font-size: 9vh;
+    font-family: 'heartbeat', Times, serif;
+  }
+  .score {
+    font-size: 7vh;
+  }
   .square {
     width: 20vw;
     height: 20vw;
     line-height: 75px;
-    font-size: 3vh;
+    font-size: 6vh;
   }
 }
