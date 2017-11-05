@@ -25,6 +25,35 @@ export default class Game extends React.Component {
     })
   }
 
+  checkGameOver() {
+    let board = this.state.boardHistory[this.state.boardHistory.length - 1].slice();
+    var gameOver = false;
+
+    for (let y=0; y<4; y++) {
+      for (let x=0; x<4; x++) {
+        if (board[x][y].value === null) {
+          return false
+        }
+        if (x < 3) {
+          if (board[x][y] === board[x+1][y]) {
+            return false
+          }
+        }
+        if (y < 3) {
+          if (board[x][y] === board[x][y+1]) {
+            return false
+          }
+        }
+      }
+    }
+
+    return true;
+  }
+
+  animateBoxes(to, from) {
+
+  }
+
   handleKeyPress(event) {
     let board = this.state.boardHistory[this.state.boardHistory.length - 1].slice();
     let points = 0;
@@ -38,26 +67,41 @@ export default class Game extends React.Component {
           let boardVals = [];
           for (let x = 3; x>=0; x--) {
             if (board[x][y].value !== null) {
-              boardVals.push(board[x][y].value);
+              boardVals.push({
+                value: board[x][y].value,
+                idx: [x,y]
+              });
             }
           }
 
           let newVals = [];
           for (let i=0; i<boardVals.length; i++) {
-            if (boardVals[i] === boardVals[i+1]) {
-              newVals.push(boardVals[i]*2)
+            if (!boardVals[i+1]) {
+              newVals.push({
+                value: boardVals[i].value,
+                idx: boardVals[i].idx
+              });
+            } else if (boardVals[i].value === boardVals[i+1].value) {
+              newVals.push({
+                value: boardVals[i].value*2,
+                idx: [boardVals[i].idx, boardVals[i + 1].idx]
+              })
               points += boardVals[i]*2;
               i+=1;
             } else {
-              newVals.push(boardVals[i]);
+              newVals.push({
+                value: boardVals[i].value,
+                idx: boardVals[i].idx
+              });
             }
           }
 
           for (let x = 3; x>=0; x--) {
             let newVal = newVals.shift();
             if (newVal) {
-              newBoard[x][y].value = newVal;
-              newBoard[x][y]['background-color'] = colorScheme[newVal.toString()]
+              this.animateBoxes([x,y], newVal.idx);
+              newBoard[x][y].value = newVal.value;
+              newBoard[x][y]['background-color'] = colorScheme[newVal.value.toString()]
             }
           }
         }
@@ -70,26 +114,42 @@ export default class Game extends React.Component {
           let boardVals = [];
           for (let x = 0; x<4; x++) {
             if (board[x][y].value !== null) {
-              boardVals.push(board[x][y].value);
+              boardVals.push({
+                value: board[x][y].value,
+                idx: [x,y]
+              });
             }
           }
 
           let newVals = [];
           for (let i=0; i<boardVals.length; i++) {
-            if (boardVals[i] === boardVals[i+1]) {
-              newVals.push(boardVals[i]*2)
+
+            if (!boardVals[i+1]) {
+              newVals.push({
+                value: boardVals[i].value,
+                idx: boardVals[i].idx
+              });
+            } else if (boardVals[i] === boardVals[i+1]) {
+              newVals.push({
+                value: boardVals[i]*2,
+                idx: [boardVals[i].idx, boardVals[i+1].idx]
+              })
               points += boardVals[i]*2;
               i+=1;
             } else {
-              newVals.push(boardVals[i]);
+              newVals.push({
+                value: boardVals[i],
+                idx: boardVals[i].idx
+              });
             }
           }
 
           for (let x = 0; x<4; x++) {
             let newVal = newVals.shift();
             if (newVal) {
-              newBoard[x][y].value = newVal;
-              newBoard[x][y]['background-color'] = colorScheme[newVal.toString()]
+              this.animateBoxes([x,y], newVal.idx);
+              newBoard[x][y].value = newVal.value;
+              newBoard[x][y]['background-color'] = colorScheme[newVal.value.toString()]
             }
           }
         }
@@ -102,26 +162,42 @@ export default class Game extends React.Component {
           let boardVals = [];
           for (let y = 0; y<4; y++) {
             if (board[x][y].value !== null) {
-              boardVals.push(board[x][y].value);
+              boardVals.push({
+                value: board[x][y].value,
+                idx: [x,y]
+              });
             }
           }
 
           let newVals = [];
           for (let i=0; i<boardVals.length; i++) {
-            if (boardVals[i] === boardVals[i+1]) {
-              newVals.push(boardVals[i]*2)
+
+            if (!boardVals[i+1]) {
+              newVals.push({
+                value: boardVals[i].value,
+                idx: boardVals[i].idx
+              });
+            } else if (boardVals[i] === boardVals[i+1]) {
+              newVals.push({
+                value: boardVals[i].value*2,
+                idx: [boardVals[i].idx, boardVals[i+1].idx]
+              })
               points += boardVals[i]*2;
               i+=1;
             } else {
-              newVals.push(boardVals[i]);
+              newVals.push({
+                value: boardVals[i].value,
+                idx: boardVals[i].idx
+              });
             }
           }
 
           for (let y = 0; y<4; y++) {
             let newVal = newVals.shift();
             if (newVal) {
-              newBoard[x][y].value = newVal;
-              newBoard[x][y]['background-color'] = colorScheme[newVal.toString()]
+              this.animateBoxes([x,y], newVal.idx);
+              newBoard[x][y].value = newVal.value;
+              newBoard[x][y]['background-color'] = colorScheme[newVal.value.toString()]
             }
           }
         }
@@ -134,26 +210,41 @@ export default class Game extends React.Component {
           let boardVals = [];
           for (let y = 3; y>=0; y--) {
             if (board[x][y].value !== null) {
-              boardVals.push(board[x][y].value);
+              boardVals.push({
+                value: board[x][y].value,
+                idx: [x,y]
+              });
             }
           }
 
           let newVals = [];
           for (let i=0; i<boardVals.length; i++) {
-            if (boardVals[i] === boardVals[i+1]) {
-              newVals.push(boardVals[i]*2)
+            if (!boardVals[i+1]) {
+              newVals.push({
+                value: boardVals[i].value,
+                idx: boardVals[i].idx
+              });
+            } else if (boardVals[i] === boardVals[i+1]) {
+              newVals.push({
+                value: boardVals[i]*2,
+                idx: [boardVals[i].idx, boardVals[i+1].value]
+              })
               points += boardVals[i]*2;
               i+=1;
             } else {
-              newVals.push(boardVals[i]);
+              newVals.push({
+                value:boardVals[i],
+                idx: boardVals[i].idx
+              });
             }
           }
 
           for (let y = 3; y>=0; y--) {
             let newVal = newVals.shift();
             if (newVal) {
-              newBoard[x][y].value = newVal;
-              newBoard[x][y]['background-color'] = colorScheme[newVal.toString()]
+              this.animateBoxes([x,y], newVal.idx);
+              newBoard[x][y].value = newVal.value;
+              newBoard[x][y]['background-color'] = colorScheme[newVal.value.toString()]
             }
           }
         }
@@ -164,16 +255,25 @@ export default class Game extends React.Component {
         return
     }
       
+    debugger
     if (_.isEqual(newBoard, board)) {
       return
     }
 
     addValueToBoard(newBoard);
-    
+
     this.setState({
       boardHistory: this.state.boardHistory.concat([newBoard]),
       score: this.state.score.concat(this.state.score[this.state.score.length - 1] + points)
     })
+  }
+
+  componentDidUpdate() {
+    var self = this;
+
+    if (this.checkGameOver()) {
+      alert('game over');
+    }
   }
   
   componentDidMount() {
@@ -216,13 +316,14 @@ export default class Game extends React.Component {
     return (
       <div ref="game">
         <span className="col-lg-12 col-md-12 col-sm-12 col-xs-12 title">4096</span>
-        <div className="col-lg-3 col-md-2 col-sm-0 col-xs-0"></div>
-        <div className="col-lg-6 col-md-8 col-sm-12 col-xs-12 board">
+        <div className="col-lg-3 col-md-3 col-sm-0 col-xs-0"></div>
+        <div className="col-lg-6 col-md-6 col-sm-12 col-xs-12 board">
           <Board
             board={this.state.boardHistory[this.state.boardHistory.length - 1]}
           />
         </div>
-        <div className="col-lg-3 col-md-2 col-sm-12 col-xs-12">
+        <div className="col-sm-3 col-xs-1"></div>
+        <div className="col-lg-3 col-md-3 col-sm-6 col-xs-10">
           <Score
             score={this.state.score[this.state.score.length - 1]}
           />
@@ -231,6 +332,7 @@ export default class Game extends React.Component {
             disabled={this.state.boardHistory.length === 1}
           />
         </div>
+        <div className="col-sm-3 col-xs-1"></div>
       </div>
     )
   }
