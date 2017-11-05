@@ -1,6 +1,9 @@
 import React from 'react';
 import Board from './Board'
 import Score from './Score'
+import StepBack from './StepBack'
+
+const _ = require('lodash');
 
 export default class Game extends React.Component {
   constructor() {
@@ -8,16 +11,23 @@ export default class Game extends React.Component {
 
     this.state = {
       boardHistory: [initialBoard],
-      score: 0
+      score: [0]
     }
 
     this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
+  handleStepback() {
+    this.setState({
+      boardHistory: this.state.boardHistory.slice(0, this.state.boardHistory.length - 1),
+      score: this.state.score.slice(0, this.state.score.length - 1)
+    })
+  }
 
   handleKeyPress(event) {
     let board = this.state.boardHistory[this.state.boardHistory.length - 1].slice();
     let points = 0;
+    let newBoard = createBoard();
 
     switch (event.key) {
       
@@ -45,9 +55,7 @@ export default class Game extends React.Component {
           for (let x = 3; x>=0; x--) {
             let newVal = newVals.shift();
             if (newVal) {
-              board[x][y].value = newVal;
-            } else {
-              board[x][y].value = null;
+              newBoard[x][y].value = newVal;
             }
           }
         }
@@ -78,9 +86,7 @@ export default class Game extends React.Component {
           for (let x = 0; x<4; x++) {
             let newVal = newVals.shift();
             if (newVal) {
-              board[x][y].value = newVal;
-            } else {
-              board[x][y].value = null;
+              newBoard[x][y].value = newVal;
             }
           }
         }
@@ -111,9 +117,7 @@ export default class Game extends React.Component {
           for (let y = 0; y<4; y++) {
             let newVal = newVals.shift();
             if (newVal) {
-              board[x][y].value = newVal;
-            } else {
-              board[x][y].value = null;
+              newBoard[x][y].value = newVal;
             }
           }
         }
@@ -144,9 +148,7 @@ export default class Game extends React.Component {
           for (let y = 3; y>=0; y--) {
             let newVal = newVals.shift();
             if (newVal) {
-              board[x][y].value = newVal;
-            } else {
-              board[x][y].value = null;
+              newBoard[x][y].value = newVal;
             }
           }
         }
@@ -156,14 +158,16 @@ export default class Game extends React.Component {
       default:
         return
     }
+      
+    if (_.isEqual(newBoard, board)) {
+      return
+    }
 
-    addValueToBoard(board);
+    addValueToBoard(newBoard);
     
-
-
     this.setState({
-      boardHistory: this.state.boardHistory.concat([board]),
-      score: this.state.score + points
+      boardHistory: this.state.boardHistory.concat([newBoard]),
+      score: this.state.score.concat(this.state.score[this.state.score.length - 1] + points)
     })
   }
   
@@ -173,25 +177,37 @@ export default class Game extends React.Component {
 
     return (
       <div>
-        <Board
-          board={this.state.boardHistory[this.state.boardHistory.length - 1]}
-        />
-        <Score
-          score={this.state.score}
-        />
+        <div className="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+        <div className="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+          <Board
+            board={this.state.boardHistory[this.state.boardHistory.length - 1]}
+          />
+          <Score
+            score={this.state.score[this.state.score.length - 1]}
+          />
+          <StepBack
+            onClick={() => this.handleStepback()}
+          />
+        </div>
+        <div className="col-lg-1 col-md-1 col-sm-0 col-xs-0"></div>
       </div>
     )
   }
 }
 
 // creates the inital board and randomly places two 2s on the board
-let initialBoard = [];
-for (let x=0; x<4; x++) {
-  initialBoard.push([]);
-  for (let y=0; y<4; y++) {
-    initialBoard[x].push({value: null, 'background-color': 'white'})
+function createBoard() {
+  let emptyBoard = [];
+  for (let x=0; x<4; x++) {
+    emptyBoard.push([]);
+    for (let y=0; y<4; y++) {
+      emptyBoard[x].push({value: null, 'background-color': 'white'})
+    }
   }
+  return emptyBoard;
 }
+
+let initialBoard = createBoard();
 initialBoard = addValueToBoard(initialBoard, true);
 initialBoard = addValueToBoard(initialBoard, true);
 
