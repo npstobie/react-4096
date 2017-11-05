@@ -1,5 +1,18 @@
+body {
+    left: 0;
+    -webkit-overflow-scrolling: touch;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
 .game {
   margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  font-size: 8vh;
 }
 
 .square {
@@ -13,7 +26,8 @@
 }
 
 .board-row {
-  text-align: center;
+  padding-right: 0px;
+  padding-left: 0px;
 }
 
 .board {
@@ -27,15 +41,15 @@
 
 .flexBox {
   display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
+  flex-flow: row wrap;
+  justify-content: center;
 }
 
 @media screen and (max-width: 480px) {
   .square {
-    width: 60px;
-    height: 60px;
-    line-height: 60px;
+    width: 20vw;
+    height: 20vw;
+    line-height: 75px;
     font-size: 3vh;
   }
 }

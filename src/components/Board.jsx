@@ -3,11 +3,12 @@ import Square from './Square'
 
 export default class Board extends React.Component {
 
-	renderSquare = (value, color, id) => (
+	renderSquare = (value, color, tag, id) => (
 		<Square 
 			color={color}
 			value={value}
-			key={id}
+			key={tag}
+			id={id}
 		/>
 	)
 
@@ -17,14 +18,14 @@ export default class Board extends React.Component {
 		var board = this.props.board;
 		for (let x=0; x<board.length; x++) {
 			for (let y=0; y<board[x].length; y++) {
-				row.push(this.renderSquare(board[x][y].value, board[x][y]['background-color'], (x*4+y)))
+				row.push(this.renderSquare(board[x][y].value, board[x][y]['background-color'], (x*4+y), ('square' + x + y)))
 			}
-			renderedSquares.push([<div key={x + 'row'} className="board-row col-md-12 col-lg-12 col-sm-12 col-xs-12 flexBox">{row}</div>]);
+			renderedSquares.push([<div key={x + 'row'} className="board-row flexBox">{row}</div>]);
 			row = [];
 		}
 		
 		return (
-			<div className="board">
+			<div id="board-container" className="board-container">
 				{renderedSquares}
 			</div>
 		)
