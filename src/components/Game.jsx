@@ -2,9 +2,11 @@ import React from 'react';
 import Board from './Board'
 import Score from './Score'
 import StepBack from './StepBack'
-const _ = require('lodash');
+import _ from 'lodash';
+import Hammer from 'hammerjs';
 
 export default class Game extends React.Component {
+
   constructor() {
     super();
 
@@ -174,14 +176,48 @@ export default class Game extends React.Component {
     })
   }
   
+  componentDidMount() {
+    var self = this;
+
+    var myElement = document.body
+    // create a simple instance
+    // by default, it only adds horizontal recognizers
+    var mc = new Hammer(myElement);
+    mc.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+
+    // listen to events...
+    mc.on("swipeup", function(ev) {
+      self.handleKeyPress({key: 'ArrowUp'})
+    });
+
+    mc.on("swipeleft", function(ev) {
+      self.handleKeyPress({key: 'ArrowLeft'})
+    });
+
+    mc.on("swiperight", function(ev) {
+      debugger
+      self.handleKeyPress({key: 'ArrowRight'})
+    });
+
+
+    mc.on("swipedown", function(ev) {
+      self.handleKeyPress({key: 'ArrowDown'})
+    });
+  }
+
+  componentWillUnmount() {
+    Hammer(document.body).off('swipeleft swiperight swipeup swipedown');
+  }
+
   render() {
     // listens for keypresses on the keyboard and calls the handleKeyPress function
     document.onkeydown = this.handleKeyPress;
 
     return (
-      <div>
+      <div ref="game">
+        <span className="col-lg-12 col-md-12 col-sm-12 col-xs-12 title">4096</span>
         <div className="col-lg-3 col-md-2 col-sm-0 col-xs-0"></div>
-        <div className="col-lg-6 col-md-8 col-sm-12 col-xs-12">
+        <div className="col-lg-6 col-md-8 col-sm-12 col-xs-12 board">
           <Board
             board={this.state.boardHistory[this.state.boardHistory.length - 1]}
           />
