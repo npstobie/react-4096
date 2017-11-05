@@ -60,6 +60,23 @@ body {
   justify-content: center;
 }
 
+@media screen and (max-width: 997px) {
+  .title {
+    text-align: center;
+    font-size: 10vh;
+    font-family: 'heartbeat', Times, serif;
+  }
+  .score {
+    font-size: 8vh;
+  }
+  .square {
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    font-size: 6vh;
+  }
+}
+
 @media screen and (max-width: 480px) {
   .title {
     text-align: center;
@@ -74,5 +91,22 @@ body {
     height: 20vw;
     line-height: 75px;
     font-size: 6vh;
+  }
+}
+
+@media screen and (max-width: 366px) {
+  .title {
+    text-align: center;
+    font-size: 9vh;
+    font-family: 'heartbeat', Times, serif;
+  }
+  .score {
+    font-size: 7vh;
+  }
+  .square {
+    width: 18vw;
+    height: 18vw;
+    line-height: 18vh;
+    font-size: 5vh;
   }
 }
