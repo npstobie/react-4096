@@ -77,22 +77,16 @@ export default class Game extends React.Component {
           let newVals = [];
           for (let i=0; i<boardVals.length; i++) {
             if (!boardVals[i+1]) {
-              newVals.push({
-                value: boardVals[i].value,
-                idx: boardVals[i].idx
-              });
+              newVals.push(boardVals[i]);
             } else if (boardVals[i].value === boardVals[i+1].value) {
               newVals.push({
                 value: boardVals[i].value*2,
                 idx: [boardVals[i].idx, boardVals[i + 1].idx]
               })
-              points += boardVals[i]*2;
+              points += boardVals[i].value*2;
               i+=1;
             } else {
-              newVals.push({
-                value: boardVals[i].value,
-                idx: boardVals[i].idx
-              });
+              newVals.push(boardVals[i]);
             }
           }
 
@@ -111,7 +105,8 @@ export default class Game extends React.Component {
       case 'ArrowUp':
 
         for (let y = 0; y<4; y++) {
-          let boardVals = [];
+          debugger
+          var boardVals = [];
           for (let x = 0; x<4; x++) {
             if (board[x][y].value !== null) {
               boardVals.push({
@@ -123,24 +118,17 @@ export default class Game extends React.Component {
 
           let newVals = [];
           for (let i=0; i<boardVals.length; i++) {
-
             if (!boardVals[i+1]) {
-              newVals.push({
-                value: boardVals[i].value,
-                idx: boardVals[i].idx
-              });
+              newVals.push(boardVals[i]);
             } else if (boardVals[i] === boardVals[i+1]) {
               newVals.push({
-                value: boardVals[i]*2,
+                value: boardVals[i].value*2,
                 idx: [boardVals[i].idx, boardVals[i+1].idx]
               })
-              points += boardVals[i]*2;
+              points += boardVals[i].value*2;
               i+=1;
             } else {
-              newVals.push({
-                value: boardVals[i],
-                idx: boardVals[i].idx
-              });
+              newVals.push(boardVals[i]);
             }
           }
 
@@ -171,24 +159,18 @@ export default class Game extends React.Component {
 
           let newVals = [];
           for (let i=0; i<boardVals.length; i++) {
-
+            debugger
             if (!boardVals[i+1]) {
-              newVals.push({
-                value: boardVals[i].value,
-                idx: boardVals[i].idx
-              });
+              newVals.push(boardVals[i]);
             } else if (boardVals[i] === boardVals[i+1]) {
               newVals.push({
                 value: boardVals[i].value*2,
                 idx: [boardVals[i].idx, boardVals[i+1].idx]
               })
-              points += boardVals[i]*2;
+              points += boardVals[i].value*2;
               i+=1;
             } else {
-              newVals.push({
-                value: boardVals[i].value,
-                idx: boardVals[i].idx
-              });
+              newVals.push(boardVals[i]);
             }
           }
 
@@ -220,22 +202,16 @@ export default class Game extends React.Component {
           let newVals = [];
           for (let i=0; i<boardVals.length; i++) {
             if (!boardVals[i+1]) {
-              newVals.push({
-                value: boardVals[i].value,
-                idx: boardVals[i].idx
-              });
+              newVals.push(boardVals[i]);
             } else if (boardVals[i] === boardVals[i+1]) {
               newVals.push({
-                value: boardVals[i]*2,
-                idx: [boardVals[i].idx, boardVals[i+1].value]
+                value: boardVals[i].value*2,
+                idx: [boardVals[i].idx, boardVals[i+1].idx]
               })
-              points += boardVals[i]*2;
+              points += boardVals[i].value*2;
               i+=1;
             } else {
-              newVals.push({
-                value:boardVals[i],
-                idx: boardVals[i].idx
-              });
+              newVals.push(boardVals[i]);
             }
           }
 
