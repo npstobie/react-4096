@@ -2,8 +2,10 @@ import React from 'react';
 import Board from './Board'
 import Score from './Score'
 import StepBack from './StepBack'
-import _ from 'lodash';
-import Hammer from 'hammerjs';
+import Hammer from 'hammerjs'
+import Bounce from 'bounce.js'
+import $ from 'jquery'
+import _ from 'lodash'
 
 export default class Game extends React.Component {
 
@@ -50,7 +52,33 @@ export default class Game extends React.Component {
     return true;
   }
 
-  animateBoxes(to, from) {
+  animateBoxes(goingTo, comingFrom, direction) {
+    // to: [0,1]
+    // from: [[1,1],[2,1]]
+    
+    switch(direction) {
+      
+      case 'up':
+
+        var toId = "#square" + goingTo[0] + goingTo[1]
+        for (let i=0; i<comingFrom.length; i++) {
+          var fromId = "#square" + comingFrom[i][0] + comingFrom[i][1];
+          var toCoord = $(toId).position().top
+          debugger
+          var fromCoord = $(fromId).position().top
+          var distance = fromCoord - toCoord;
+          
+          var bounce = new Bounce();
+          bounce.translate({
+            from: { x: 0, y: 0 },
+            to: { x: 0, y: -distance },
+            duration: 200,
+            bounces: 0
+          });
+          bounce.applyTo(document.querySelectorAll(fromId))
+          setTimeout(function(){$(fromId).css({animation: 'none'})},200)
+        }
+    }
 
   }
 
@@ -69,7 +97,7 @@ export default class Game extends React.Component {
             if (board[x][y].value !== null) {
               boardVals.push({
                 value: board[x][y].value,
-                idx: [x,y]
+                idx: [[x,y]]
               });
             }
           }
@@ -81,7 +109,7 @@ export default class Game extends React.Component {
             } else if (boardVals[i].value === boardVals[i+1].value) {
               newVals.push({
                 value: boardVals[i].value*2,
-                idx: [boardVals[i].idx, boardVals[i+1].idx]
+                idx: [boardVals[i].idx[0], boardVals[i+1].idx[0]]
               })
               points += boardVals[i].value*2;
               i+=1;
@@ -93,7 +121,7 @@ export default class Game extends React.Component {
           for (let x = 0; x<4; x++) {
             let newVal = newVals.shift();
             if (newVal) {
-              this.animateBoxes([x,y], newVal.idx);
+              this.animateBoxes([x,y], newVal.idx, 'up');
               newBoard[x][y].value = newVal.value;
               newBoard[x][y]['background-color'] = colorScheme[newVal.value.toString()]
             }
@@ -110,7 +138,7 @@ export default class Game extends React.Component {
             if (board[x][y].value !== null) {
               boardVals.push({
                 value: board[x][y].value,
-                idx: [x,y]
+                idx: [[x,y]]
               });
             }
           }
@@ -134,7 +162,7 @@ export default class Game extends React.Component {
           for (let x = 3; x>=0; x--) {
             let newVal = newVals.shift();
             if (newVal) {
-              this.animateBoxes([x,y], newVal.idx);
+              this.animateBoxes([x,y], newVal.idx, 'down');
               newBoard[x][y].value = newVal.value;
               newBoard[x][y]['background-color'] = colorScheme[newVal.value.toString()]
             }
@@ -151,7 +179,7 @@ export default class Game extends React.Component {
             if (board[x][y].value !== null) {
               boardVals.push({
                 value: board[x][y].value,
-                idx: [x,y]
+                idx: [[x,y]]
               });
             }
           }
@@ -175,7 +203,7 @@ export default class Game extends React.Component {
           for (let y = 0; y<4; y++) {
             let newVal = newVals.shift();
             if (newVal) {
-              this.animateBoxes([x,y], newVal.idx);
+              this.animateBoxes([x,y], newVal.idx, 'left');
               newBoard[x][y].value = newVal.value;
               newBoard[x][y]['background-color'] = colorScheme[newVal.value.toString()]
             }
@@ -192,7 +220,7 @@ export default class Game extends React.Component {
             if (board[x][y].value !== null) {
               boardVals.push({
                 value: board[x][y].value,
-                idx: [x,y]
+                idx: [[x,y]]
               });
             }
           }
@@ -216,7 +244,7 @@ export default class Game extends React.Component {
           for (let y = 3; y>=0; y--) {
             let newVal = newVals.shift();
             if (newVal) {
-              this.animateBoxes([x,y], newVal.idx);
+              this.animateBoxes([x,y], newVal.idx, 'right');
               newBoard[x][y].value = newVal.value;
               newBoard[x][y]['background-color'] = colorScheme[newVal.value.toString()]
             }
@@ -232,13 +260,16 @@ export default class Game extends React.Component {
     if (_.isEqual(newBoard, board)) {
       return
     }
-
+    
     addValueToBoard(newBoard);
+    setTimeout(()=>{
 
-    this.setState({
-      boardHistory: this.state.boardHistory.concat([newBoard]),
-      score: this.state.score.concat(this.state.score[this.state.score.length - 1] + points)
-    })
+
+      this.setState({
+        boardHistory: this.state.boardHistory.concat([newBoard]),
+        score: this.state.score.concat(this.state.score[this.state.score.length - 1] + points)
+      })
+    },150)
   }
 
   componentDidUpdate() {
