@@ -60,6 +60,47 @@ export default class Game extends React.Component {
     let newBoard = createBoard();
 
     switch (event.key) {
+
+      case 'ArrowUp':
+
+        for (let y = 0; y<4; y++) {
+          var boardVals = [];
+          for (let x = 0; x<4; x++) {
+            if (board[x][y].value !== null) {
+              boardVals.push({
+                value: board[x][y].value,
+                idx: [x,y]
+              });
+            }
+          }
+
+          let newVals = [];
+          for (let i=0; i<boardVals.length; i++) {
+            if (!boardVals[i+1]) {
+              newVals.push(boardVals[i]);
+            } else if (boardVals[i].value === boardVals[i+1].value) {
+              newVals.push({
+                value: boardVals[i].value*2,
+                idx: [boardVals[i].idx, boardVals[i+1].idx]
+              })
+              points += boardVals[i].value*2;
+              i+=1;
+            } else {
+              newVals.push(boardVals[i]);
+            }
+          }
+
+          for (let x = 0; x<4; x++) {
+            let newVal = newVals.shift();
+            if (newVal) {
+              this.animateBoxes([x,y], newVal.idx);
+              newBoard[x][y].value = newVal.value;
+              newBoard[x][y]['background-color'] = colorScheme[newVal.value.toString()]
+            }
+          }
+        }
+
+        break
       
       case 'ArrowDown':
 
@@ -102,48 +143,6 @@ export default class Game extends React.Component {
 
         break
 
-      case 'ArrowUp':
-
-        for (let y = 0; y<4; y++) {
-          debugger
-          var boardVals = [];
-          for (let x = 0; x<4; x++) {
-            if (board[x][y].value !== null) {
-              boardVals.push({
-                value: board[x][y].value,
-                idx: [x,y]
-              });
-            }
-          }
-
-          let newVals = [];
-          for (let i=0; i<boardVals.length; i++) {
-            if (!boardVals[i+1]) {
-              newVals.push(boardVals[i]);
-            } else if (boardVals[i] === boardVals[i+1]) {
-              newVals.push({
-                value: boardVals[i].value*2,
-                idx: [boardVals[i].idx, boardVals[i+1].idx]
-              })
-              points += boardVals[i].value*2;
-              i+=1;
-            } else {
-              newVals.push(boardVals[i]);
-            }
-          }
-
-          for (let x = 0; x<4; x++) {
-            let newVal = newVals.shift();
-            if (newVal) {
-              this.animateBoxes([x,y], newVal.idx);
-              newBoard[x][y].value = newVal.value;
-              newBoard[x][y]['background-color'] = colorScheme[newVal.value.toString()]
-            }
-          }
-        }
-
-        break
-
       case 'ArrowLeft':
 
         for (let x = 0; x < 4; x++) {
@@ -159,10 +158,9 @@ export default class Game extends React.Component {
 
           let newVals = [];
           for (let i=0; i<boardVals.length; i++) {
-            debugger
             if (!boardVals[i+1]) {
               newVals.push(boardVals[i]);
-            } else if (boardVals[i] === boardVals[i+1]) {
+            } else if (boardVals[i].value === boardVals[i+1].value) {
               newVals.push({
                 value: boardVals[i].value*2,
                 idx: [boardVals[i].idx, boardVals[i+1].idx]
@@ -203,7 +201,7 @@ export default class Game extends React.Component {
           for (let i=0; i<boardVals.length; i++) {
             if (!boardVals[i+1]) {
               newVals.push(boardVals[i]);
-            } else if (boardVals[i] === boardVals[i+1]) {
+            } else if (boardVals[i].value === boardVals[i+1].value) {
               newVals.push({
                 value: boardVals[i].value*2,
                 idx: [boardVals[i].idx, boardVals[i+1].idx]
@@ -231,7 +229,6 @@ export default class Game extends React.Component {
         return
     }
       
-    debugger
     if (_.isEqual(newBoard, board)) {
       return
     }
@@ -271,7 +268,6 @@ export default class Game extends React.Component {
     });
 
     mc.on("swiperight", function(ev) {
-      debugger
       self.handleKeyPress({key: 'ArrowRight'})
     });
 
