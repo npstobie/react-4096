@@ -13,8 +13,8 @@ export default function GameOverModal(props){
 		        Your score: {props.score}
 		      </div>
 		      <div className="modal-footer">
-		        <button onClick={props.onStepBackClick} type="button" className="btn btn-default modalText modalBtns" data-dismiss="modal">Close</button>
-		        <button onClick={props.onNewGameClick} type="button" className="btn btn-default modalText modalBtns"  data-dismiss="modal">New Game</button>
+		        <button onClick={props.onStepBackClick} type="button" className="btn btn-default modalText modalBtns" data-dismiss="modal">Reverse Move</button>
+		        <button onClick={props.onNewGameClick} type="button" className="btn btn-default modalText modalBtns"  data-dismiss="modal">Start Over</button>
 		      </div>
 		    </div>
 		  </div>
