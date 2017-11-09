@@ -2,8 +2,12 @@ import React from 'react';
 import Board from './Board'
 import Score from './Score'
 import StepBack from './StepBack'
+import GameOverModal from './GameOverModal'
 import _ from 'lodash';
 import Hammer from 'hammerjs';
+// import $ from 'jquery'
+// bootstrap requires jquery globally, was causing a webpack error importing it as seen above
+declare var $: $;
 
 export default class Game extends React.Component {
 
@@ -16,6 +20,13 @@ export default class Game extends React.Component {
     }
 
     this.handleKeyPress = this.handleKeyPress.bind(this);
+  }
+
+  startNewGame() {
+    this.setState({
+      boardHistory: this.state.boardHistory.slice(0,1),
+      score: this.state.score.slice(0,1)
+    })
   }
 
   handleStepback() {
@@ -169,6 +180,10 @@ export default class Game extends React.Component {
     }
 
     addValueToBoard(newBoard);
+
+    if (isGameOver(newBoard)) {
+      $('#myModal').modal('show');
+    }
     
     this.setState({
       boardHistory: this.state.boardHistory.concat([newBoard]),
@@ -203,9 +218,16 @@ export default class Game extends React.Component {
     mc.on("swipedown", function(ev) {
       self.handleKeyPress({key: 'ArrowDown'})
     });
+
+    // var board = document.getElementById('board-container');
+
+    // board.addEventListener('touchmove', function(e) {
+    //   e.preventDefault();
+    // }, false);
   }
 
   componentWillUnmount() {
+    // removes swipe event listeners when component unmounts
     Hammer(document.body).off('swipeleft swiperight swipeup swipedown');
   }
 
@@ -215,14 +237,13 @@ export default class Game extends React.Component {
 
     return (
       <div ref="game">
-        <span className="col-lg-12 col-md-12 col-sm-12 col-xs-12 title">4096</span>
-        <div className="col-lg-3 col-md-2 col-sm-0 col-xs-0"></div>
-        <div className="col-lg-6 col-md-8 col-sm-12 col-xs-12 board">
+        <div className="col-lg-3 col-md-2 col-sm-2 col-xs-0 title">4096</div>
+        <div className="col-lg-6 col-md-8 col-sm-8 col-xs-12 board">
           <Board
             board={this.state.boardHistory[this.state.boardHistory.length - 1]}
           />
         </div>
-        <div className="col-lg-3 col-md-2 col-sm-12 col-xs-12">
+        <div className="col-lg-3 col-md-2 col-sm-2 col-xs-12">
           <Score
             score={this.state.score[this.state.score.length - 1]}
           />
@@ -230,6 +251,11 @@ export default class Game extends React.Component {
             onClick={() => this.handleStepback()}
             disabled={this.state.boardHistory.length === 1}
           />
+          <GameOverModal
+            onStepBackClick={() => this.handleStepback()}
+            onNewGameClick={() => this.startNewGame()}
+            score={this.state.score[this.state.score.length - 1]}
+          /> 
         </div>
       </div>
     )
@@ -267,6 +293,27 @@ const colorScheme = {
 let initialBoard = createBoard();
 initialBoard = addValueToBoard(initialBoard, true);
 initialBoard = addValueToBoard(initialBoard, true);
+
+function isGameOver(board) {
+  for (var x=0; x<board.length; x++) {
+    for (var y=0; y<board.length; y++) {
+      if (board[x][y].value === null) {
+        return false
+      }
+      if (x+1 < board.length){
+        if (board[x][y].value === board[x+1][y].value){
+          return false
+        }
+      }
+      if (y+1 < board.length) {
+        if (board[x][y].value === board[x][y+1].value) {
+          return false
+        }
+      }
+    }
+  }
+  return true
+}
 
 function addValueToBoard(board, first) {
   let availableSquares = [];
