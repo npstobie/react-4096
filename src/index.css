@@ -3,6 +3,10 @@
   src: url('./assets/heartbeat.ttf');
 }
 
+h4, div {
+  font-family: 'heartbeat', Times, serif;
+}
+
 body {
   left: 0;
   -webkit-overflow-scrolling: touch;
@@ -19,7 +23,7 @@ body {
 
 .title {
   text-align: center;
-  font-size: 12vh;
+  font-size: 18vh;
   font-family: 'heartbeat', Times, serif;
 }
 
@@ -41,6 +45,7 @@ body {
 
 .board {
   font-size: 0;
+  margin-top: 15vh;
 }
 
 .score {
@@ -52,12 +57,39 @@ body {
 .stepback {
   font-family: 'heartbeat', Times, serif;
   font-size: 5vh;
+  white-space: normal;
 }
 
 .flexBox {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
+}
+
+.top {
+  height: 5vh;
+}
+
+#myModal {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.modal-content {
+  background-color: #ecf0f1
+}
+
+.modalText {
+  font-size: 5vh;
+  text-align: center;
+}
+
+.modalBtns {
+  display: inline-block;
+  width: 40%;
+}
+
+.modal-footer {
+  text-align: center;
 }
 
 @media screen and (max-width: 997px) {
@@ -76,6 +108,11 @@ body {
     font-size: 6vh;
   }
 }
+@media screen and (max-width: 767px) {
+  .board {
+    margin-top: 0vh;
+  }
+}
 
 @media screen and (max-width: 480px) {
   .title {
@@ -91,6 +128,10 @@ body {
     height: 20vw;
     line-height: 75px;
     font-size: 6vh;
+  }
+  .modalText {
+    font-size: 4vh;
+    text-align: center;
   }
 }
 
@@ -108,5 +149,9 @@ body {
     height: 18vw;
     line-height: 18vh;
     font-size: 5vh;
+  }
+  .modalText {
+    font-size: 3vh;
+    text-align: center;
   }
 }
