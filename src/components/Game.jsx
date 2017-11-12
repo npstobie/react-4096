@@ -5,6 +5,7 @@ import StepBack from './StepBack'
 import GameOverModal from './GameOverModal'
 import _ from 'lodash';
 import Hammer from 'hammerjs';
+import Bounce from 'bounce.js'
 // import $ from 'jquery'
 // bootstrap requires jquery globally, was causing a webpack error importing it as seen above
 declare var $: $;
@@ -36,13 +37,40 @@ export default class Game extends React.Component {
     })
   }
 
+  animateBoxes(goingTo, comingFrom, direction) {
+    switch(direction) {
+      
+      case 'up':
+
+        var toId = "#square" + goingTo[0] + goingTo[1]
+        for (let i=0; i<comingFrom.length; i++) {
+          var fromId = "#square" + comingFrom[i][0] + comingFrom[i][1];
+          var toCoord = $(toId).position().top
+          debugger
+          var fromCoord = $(fromId).position().top
+          var distance = fromCoord - toCoord;
+          
+          var bounce = new Bounce();
+          bounce.translate({
+            from: { x: 0, y: 0 },
+            to: { x: 0, y: -200 },
+            duration: 200,
+            bounces: 0
+          });
+          bounce.applyTo(document.querySelectorAll('#square20'))
+          setTimeout(function(){$(fromId).css({animation: 'none'})},200)
+        }
+    }
+
+  }
+
   handleKeyPress(event) {
     let board = this.state.boardHistory[this.state.boardHistory.length - 1].slice();
     let points = 0;
     let newBoard = createBoard();
 
     switch (event.key) {
-      
+
       case 'ArrowDown':
 
         for (let y = 0; y<4; y++) {
