@@ -3,6 +3,7 @@ import Board from './Board'
 import Score from './Score'
 import StepBack from './StepBack'
 import GameOverModal from './GameOverModal'
+import SubmitScoreModal from './SubmitScoreModal'
 import _ from 'lodash';
 import Hammer from 'hammerjs';
 import Bounce from 'bounce.js'
@@ -17,7 +18,8 @@ export default class Game extends React.Component {
 
     this.state = {
       boardHistory: [initialBoard],
-      score: [0]
+      score: [0],
+      name: ''
     }
 
     this.handleKeyPress = this.handleKeyPress.bind(this);
@@ -27,6 +29,24 @@ export default class Game extends React.Component {
     this.setState({
       boardHistory: this.state.boardHistory.slice(0,1),
       score: this.state.score.slice(0,1)
+    })
+  }
+
+  openSubmissionForm() {
+    $('#myModal').modal('hide');
+    $('#submitScore').modal('show');
+  }
+
+  submitScore(name, score) {
+    $.post('/score', {name: name, score: score})
+      .done(function(response) {
+        console.log(response)
+      })
+  }
+
+  changeName() {
+    this.setState({
+      name: event.target.value
     })
   }
 
@@ -264,7 +284,7 @@ export default class Game extends React.Component {
     document.onkeydown = this.handleKeyPress;
 
     return (
-      <div ref="game">
+      <div ref="game" class="game">
         <div className="col-lg-3 col-md-2 col-sm-2 col-xs-0 title">4096</div>
         <div className="col-lg-6 col-md-8 col-sm-8 col-xs-12 board">
           <Board
@@ -282,8 +302,15 @@ export default class Game extends React.Component {
           <GameOverModal
             onStepBackClick={() => this.handleStepback()}
             onNewGameClick={() => this.startNewGame()}
+            onSubmitScoreClick={() => this.openSubmissionForm()}
             score={this.state.score[this.state.score.length - 1]}
-          /> 
+          />
+          <SubmitScoreModal 
+            submitScore={() => this.submitScore()}
+            score={this.state.score[this.state.score.length - 1]}
+            value={this.state.name}
+            nameChange={this.changeName()}
+          />
         </div>
       </div>
     )
