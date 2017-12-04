@@ -5,9 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
-
 var app = express();
 
 // view engine setup
@@ -16,21 +13,51 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'client', 'build')));
 
-app.use('/', index);
-app.use('/users', users);
+app.listen(process.env.PORT || 4096, function () {
+  console.log('4096 is Running.')
+})
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+// // catch 404 and forward to error handler
+// app.use(function(req, res, next) {
+//   var err = new Error('Not Found');
+//   err.status = 404;
+//   next(err);
+// });
+
+// just storing scores in memory for simplicity
+var scores = [];
+
+app.get('/', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
 });
+
+app.get('/high_scores', (req, res) => {
+	res.send(scores);
+})
+
+app.post('/score', (req, res) => {
+	console.log(req);
+	checkScore(req.body.score, req.body.name);
+})
+
+function checkScore(score, name){
+	if (score > scores[scores.length - 1].score) {
+		scores.pop();
+		for (var i=0; i<scores.length; i++) {
+			if (score > scores[i].score) {
+				scores = scores.slice(0,i).concat([{score: score, name: name}]).concat(scores.slice(i+1));
+			}
+		}
+		res.send({scores: scores, added: true})
+	} else {
+		res.send({scores: scores, added: false})
+	}
+}
 
 // error handler
 app.use(function(err, req, res, next) {
