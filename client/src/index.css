@@ -23,8 +23,13 @@ body {
 
 .title {
   text-align: center;
-  font-size: 18vh;
+  font-size: 12vh;
   font-family: 'heartbeat', Times, serif;
+}
+
+.name-input {
+  margin-right: 15px;
+  text-align: center;
 }
 
 .square {
@@ -49,7 +54,11 @@ body {
 
 .board {
   font-size: 0;
-  margin-top: 15vh;
+  margin-top: 5vh;
+}
+
+.game {
+  margin-top: 2vh;
 }
 
 .score {
@@ -60,7 +69,7 @@ body {
 
 .stepback {
   font-family: 'heartbeat', Times, serif;
-  font-size: 5vh;
+  font-size: 4vh;
   white-space: normal;
 }
 
@@ -89,7 +98,9 @@ body {
 
 .modalBtns {
   display: inline-block;
-  width: 40%;
+  width: 30%;
+  font-size: 4vh;
+  margin: 5px;
 }
 
 .modal-footer {
@@ -113,8 +124,14 @@ body {
   }
 }
 @media screen and (max-width: 767px) {
-  .board {
+  .game {
     margin-top: 0vh;
+  }
+  .board {
+    margin-top: 0px;
+  }
+  .modalBtns {
+    width: 80%;
   }
 }
 
