@@ -3,8 +3,10 @@ import Board from './Board'
 import Score from './Score'
 import StepBack from './StepBack'
 import GameOverModal from './GameOverModal'
+import SubmitScoreModal from './SubmitScoreModal'
 import _ from 'lodash';
 import Hammer from 'hammerjs';
+import Bounce from 'bounce.js'
 // import $ from 'jquery'
 // bootstrap requires jquery globally, was causing a webpack error importing it as seen above
 declare var $: $;
@@ -16,7 +18,8 @@ export default class Game extends React.Component {
 
     this.state = {
       boardHistory: [initialBoard],
-      score: [0]
+      score: [0],
+      name: ''
     }
 
     this.handleKeyPress = this.handleKeyPress.bind(this);
@@ -29,11 +32,56 @@ export default class Game extends React.Component {
     })
   }
 
+  openSubmissionForm() {
+    $('#myModal').modal('hide');
+    $('#submitScore').modal('show');
+  }
+
+  submitScore(name, score) {
+    $.post('/score', {name: name, score: score})
+      .done(function(response) {
+        console.log(response)
+      })
+  }
+
+  changeName() {
+    this.setState({
+      name: event.target.value
+    })
+  }
+
   handleStepback() {
     this.setState({
       boardHistory: this.state.boardHistory.slice(0, this.state.boardHistory.length - 1),
       score: this.state.score.slice(0, this.state.score.length - 1)
     })
+  }
+
+  animateBoxes(goingTo, comingFrom, direction) {
+    switch(direction) {
+      
+      case 'up':
+
+        var toId = "#square" + goingTo[0] + goingTo[1]
+        for (let i=0; i<comingFrom.length; i++) {
+          var fromId = "#square" + comingFrom[i][0] + comingFrom[i][1];
+          var toCoord = $(toId).position().top
+          debugger
+          var fromCoord = $(fromId).position().top
+          var distance = fromCoord - toCoord;
+          
+          var bounce = new Bounce();
+          bounce.translate({
+            from: { x: 0, y: 0 },
+            to: { x: 0, y: -200 },
+            duration: 200,
+            bounces: 0
+          });
+          bounce.applyTo(document.querySelectorAll('#square20'))
+          setTimeout(function(){$(fromId).css({animation: 'none'})},200)
+        }
+    }
+
   }
 
   handleKeyPress(event) {
@@ -42,7 +90,7 @@ export default class Game extends React.Component {
     let newBoard = createBoard();
 
     switch (event.key) {
-      
+
       case 'ArrowDown':
 
         for (let y = 0; y<4; y++) {
@@ -236,7 +284,7 @@ export default class Game extends React.Component {
     document.onkeydown = this.handleKeyPress;
 
     return (
-      <div ref="game">
+      <div ref="game" class="game">
         <div className="col-lg-3 col-md-2 col-sm-2 col-xs-0 title">4096</div>
         <div className="col-lg-6 col-md-8 col-sm-8 col-xs-12 board">
           <Board
@@ -254,8 +302,15 @@ export default class Game extends React.Component {
           <GameOverModal
             onStepBackClick={() => this.handleStepback()}
             onNewGameClick={() => this.startNewGame()}
+            onSubmitScoreClick={() => this.openSubmissionForm()}
             score={this.state.score[this.state.score.length - 1]}
-          /> 
+          />
+          <SubmitScoreModal 
+            submitScore={() => this.submitScore()}
+            score={this.state.score[this.state.score.length - 1]}
+            value={this.state.name}
+            nameChange={this.changeName()}
+          />
         </div>
       </div>
     )
