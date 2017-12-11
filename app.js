@@ -30,7 +30,7 @@ app.listen(process.env.PORT || 4096, function () {
 // });
 
 // just storing scores in memory for simplicity
-var scores = [];
+var scores = [{name: 'Andy', score: 22092}, {name: 'Nick', score: 4596}, {name: 'Sam', score: 3296}, {name: 'Hyun', score: 960}, {name: 'Loser', score: 442}];
 
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
@@ -41,21 +41,26 @@ app.get('/high_scores', (req, res) => {
 })
 
 app.post('/score', (req, res) => {
-	console.log(req);
-	checkScore(req.body.score, req.body.name);
+	var scores = addScore(req.body.score, req.body.name);
+	res.send(scores);
 })
 
-function checkScore(score, name){
+function addScore(score, name){
 	if (score > scores[scores.length - 1].score) {
 		scores.pop();
+		var added = false;
 		for (var i=0; i<scores.length; i++) {
 			if (score > scores[i].score) {
 				scores = scores.slice(0,i).concat([{score: score, name: name}]).concat(scores.slice(i+1));
+				added = true
 			}
 		}
-		res.send({scores: scores, added: true})
+		if (!added) {
+			scores.push({score: score, name: name})
+		}
+		return {scores: scores, added: true}
 	} else {
-		res.send({scores: scores, added: false})
+		return {scores: scores, added: false}
 	}
 }
 
