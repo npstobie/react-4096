@@ -288,6 +288,12 @@ export default class Game extends React.Component {
     });
 
     self.getScores();
+
+    $('#name-input').keypress(function(event) {
+      if (event.keyCode == 13) {
+          event.preventDefault();
+      }
+    });
   }
 
   componentWillUnmount() {
