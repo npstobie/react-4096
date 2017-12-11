@@ -22,13 +22,6 @@ app.listen(process.env.PORT || 4096, function () {
   console.log('4096 is Running.')
 })
 
-// // catch 404 and forward to error handler
-// app.use(function(req, res, next) {
-//   var err = new Error('Not Found');
-//   err.status = 404;
-//   next(err);
-// });
-
 // just storing scores in memory for simplicity
 var scores = [{name: 'Andy', score: 22092}, {name: 'Nick', score: 4596}, {name: 'Sam', score: 3296}, {name: 'Hyun', score: 960}, {name: 'Loser', score: 442}];
 
