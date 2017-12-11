@@ -23,7 +23,7 @@ body {
 
 .title {
   text-align: center;
-  font-size: 10vh;
+  font-size: 14vh;
   font-family: 'natural', Times, serif;;
 }
 
@@ -101,7 +101,7 @@ body {
   display: inline-block;
   width: 30%;
   font-size: 4vh;
-  margin: 5px;
+  margin: 5px !important;
 }
 
 .modal-footer {
@@ -119,7 +119,7 @@ body {
 @media screen and (max-width: 997px) {
   .title {
     text-align: center;
-    font-size: 9vh;
+    font-size: 12vh;
     font-family: 'natural', Times, serif;;
   }
   .score {
@@ -129,7 +129,7 @@ body {
     width: 80px;
     height: 80px;
     line-height: 80px;
-    font-size: 5vh;
+    font-size: 4vh;
   }
   .game {
     margin-top: 0vh;
@@ -146,6 +146,9 @@ body {
   .board {
     margin-top: 0px;
   }
+  .title {
+    font-size: 6vh
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -153,9 +156,6 @@ body {
     text-align: center;
     font-size: 6vh;
     font-family: 'natural', Times, serif;;
-  }
-  .score {
-    font-size: 5vh;
   }
   .square {
     width: 20vw;

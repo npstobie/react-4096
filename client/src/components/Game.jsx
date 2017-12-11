@@ -291,7 +291,7 @@ export default class Game extends React.Component {
 
     $('#name-input').keypress(function(event) {
       if (event.keyCode == 13) {
-          event.preventDefault();
+        event.preventDefault();
       }
     });
   }
