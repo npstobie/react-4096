@@ -9,17 +9,20 @@ export default function SubmitScoreModal(props){
 		        <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		        <h4 className="modalText" id="myModalLabel">Submit Your Score</h4>
 		      </div>
+		    	{/*
+			    	the code below is repetitve, the whole modal system can be refactored by dumbing down the components
+			    	create a modal component that recieves the body and head as props
+		    	*/}
 		      <div className="modal-footer">
 		        <form className="form-inline">
 				      <div className="form-group modal-body modalText">
 				        Your score: {props.score}
 				      </div>
-		          <div class="form-group">
-		            <input class="form-control name-input" placeholder="Enter Name" value={props.value} onChange={props.nameChange}></input>
+		          <div className="form-group">
+		            <input id="name-input" className="form-control name-input" placeholder="Enter Name"></input>
 		          </div>
-		          <button type="submit" class="btn btn-primary" onClick={props.submitScore}>Submit</button>
+		          <button type="button" className="btn btn-primary" onClick={props.submitScore} data-dismiss="modal">Submit</button>
 		        </form>
-
 		      </div>
 		    </div>
 		  </div>

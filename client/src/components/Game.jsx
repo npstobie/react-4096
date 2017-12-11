@@ -1,14 +1,14 @@
 import React from 'react';
 import Board from './Board'
 import Score from './Score'
-import StepBack from './StepBack'
+import ScoreBoard from './ScoreBoard'
+import ScoreAdded from './ScoreAdded'
+import SimpleButton from './SimpleButton'
 import GameOverModal from './GameOverModal'
 import SubmitScoreModal from './SubmitScoreModal'
 import _ from 'lodash';
 import Hammer from 'hammerjs';
 import Bounce from 'bounce.js'
-// import $ from 'jquery'
-// bootstrap requires jquery globally, was causing a webpack error importing it as seen above
 declare var $: $;
 
 export default class Game extends React.Component {
@@ -19,7 +19,9 @@ export default class Game extends React.Component {
     this.state = {
       boardHistory: [initialBoard],
       score: [0],
-      name: ''
+      name: '',
+      scores: [],
+      score_submission: false
     }
 
     this.handleKeyPress = this.handleKeyPress.bind(this);
@@ -37,14 +39,34 @@ export default class Game extends React.Component {
     $('#submitScore').modal('show');
   }
 
-  submitScore(name, score) {
-    $.post('/score', {name: name, score: score})
-      .done(function(response) {
-        console.log(response)
+  getScores() {
+    var self = this;
+    $.get('/high_scores')
+      .done(function(scores){
+        self.setState({scores: scores})
       })
   }
 
-  changeName() {
+  submitScore() {
+    var self = this;
+    var name = $('#name-input').val()
+    var score = this.state.score[this.state.score.length - 1]
+    $.post('/score', {name: name, score: score})
+      .done(function(response) {
+        if (response.added) {
+          self.setState({score_submission: true, scores: response.scores})
+        } else {
+          self.setState({score_submission: false})
+        }
+        $("#scoreAddedModal").modal('show');
+      })
+  }
+
+  viewHighScores() {
+    $("#scoreBoardModal").modal('show')
+  }
+
+  changeName(event) {
     this.setState({
       name: event.target.value
     })
@@ -66,7 +88,6 @@ export default class Game extends React.Component {
         for (let i=0; i<comingFrom.length; i++) {
           var fromId = "#square" + comingFrom[i][0] + comingFrom[i][1];
           var toCoord = $(toId).position().top
-          debugger
           var fromCoord = $(fromId).position().top
           var distance = fromCoord - toCoord;
           
@@ -258,7 +279,6 @@ export default class Game extends React.Component {
     });
 
     mc.on("swiperight", function(ev) {
-      debugger
       self.handleKeyPress({key: 'ArrowRight'})
     });
 
@@ -267,11 +287,7 @@ export default class Game extends React.Component {
       self.handleKeyPress({key: 'ArrowDown'})
     });
 
-    // var board = document.getElementById('board-container');
-
-    // board.addEventListener('touchmove', function(e) {
-    //   e.preventDefault();
-    // }, false);
+    self.getScores();
   }
 
   componentWillUnmount() {
@@ -285,7 +301,9 @@ export default class Game extends React.Component {
 
     return (
       <div ref="game" class="game">
-        <div className="col-lg-3 col-md-2 col-sm-2 col-xs-0 title">4096</div>
+        <div className="col-lg-3 col-md-2 col-sm-2 col-xs-0">
+          <div className="title">4096</div>
+        </div>
         <div className="col-lg-6 col-md-8 col-sm-8 col-xs-12 board">
           <Board
             board={this.state.boardHistory[this.state.boardHistory.length - 1]}
@@ -295,9 +313,22 @@ export default class Game extends React.Component {
           <Score
             score={this.state.score[this.state.score.length - 1]}
           />
-          <StepBack
+          {/*<StepBack
             onClick={() => this.handleStepback()}
             disabled={this.state.boardHistory.length === 1}
+          />*/}
+          <SimpleButton
+            onClick={() => this.handleStepback()}
+            disabled={this.state.boardHistory.length === 1}
+            buttonText = "Step Back"
+          />
+          <SimpleButton
+            onClick={() => this.startNewGame()}
+            buttonText = "New Game"
+          />
+          <ScoreBoard
+            scores={this.state.scores}
+            viewHighScores={() => this.viewHighScores()}
           />
           <GameOverModal
             onStepBackClick={() => this.handleStepback()}
@@ -309,7 +340,10 @@ export default class Game extends React.Component {
             submitScore={() => this.submitScore()}
             score={this.state.score[this.state.score.length - 1]}
             value={this.state.name}
-            nameChange={this.changeName()}
+          />
+          <ScoreAdded
+            submitted={this.state.score_submission}
+            scores={this.state.scores}
           />
         </div>
       </div>
